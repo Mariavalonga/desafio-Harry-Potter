@@ -49,6 +49,24 @@ app.get('/bruxos', async (req, res) => {
         res.status(500).json({ error: 'Erro ao buscar os bruxos' });
     }
     });
+
+    app.get('/bruxos/:id', async (req, res) => {
+        const id = req.params.id;
+    
+        try {
+            const result = await pool.query('SELECT * FROM bruxos WHERE id = $1', [id]);
+    
+            if (result.rows.length === 0) {
+                return res.status(404).json({ error: 'Bruxo não encontrado' });
+            }
+    
+            res.json(result.rows[0]);
+        } catch (error) {
+            console.error('Erro ao buscar o bruxo:', error);
+            res.status(500).json({ error: 'Erro ao buscar o bruxo' });
+        }
+    });
+    
     app.put('/bruxos/:id', async (req, res) => {
         const id = req.params.id;
         const { nome, idade, casa, habilidade, status_sangue } = req.body;
@@ -94,6 +112,23 @@ app.get('/bruxos', async (req, res) => {
             console.error('Erro ao buscar as varinhas:', error);
             res.status(500).json({ error: 'Erro ao buscar as varinhas' });
         }
+        });
+
+        app.get('/varinhas/:id', async (req, res) => {
+            const id = req.params.id;
+        
+            try {
+                const result = await pool.query('SELECT * FROM varinhas WHERE id = $1', [id]);
+        
+                if (result.rows.length === 0) {
+                    return res.status(404).json({ error: 'Varinha não encontrada' });
+                }
+        
+                res.json(result.rows[0]);
+            } catch (error) {
+                console.error('Erro ao buscar a varinha:', error);
+                res.status(500).json({ error: 'Erro ao buscar a varinha' });
+            }
         });
 
         app.put('/varinhas/:id', async (req, res) => {
